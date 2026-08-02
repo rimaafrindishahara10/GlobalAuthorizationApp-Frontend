@@ -1,18 +1,71 @@
 import React, { useState } from 'react';
 import { User, Mail, Lock, ArrowRight, Shield } from 'lucide-react';
+import toast from 'react-hot-toast';
+import type RegisterData from '../models/RegisterData';
+import { registerUser } from '../services/AuthServices';
+import { useNavigate } from 'react-router';
+
 
 export default function SignupPage() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [data, setData] = useState<RegisterData>({
+    name: '',
+    email: '',
+    password: '',
+  });
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    // Simulate registration request
-    setTimeout(() => setIsLoading(false), 1500);
+  const [error, setError] = useState<string | null>(null);
+ 
+  // Define the handleInputChange function to update the state based on input changes
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setData((prevData) => ({
+      ...prevData,
+      [event.target.name]: event.target.value,
+    }));
   };
+
+  // Define the handleSubmit function to handle form submission
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsLoading(true);
+    setError(null);
+    console.log("Submitting data:", data);
+
+    //validate the input fields
+    if(data.name.trim()=== ""){
+      toast.error("Name is required");
+      setIsLoading(false);
+      return;
+    }
+    if(data.email.trim()=== ""){
+      toast.error("Email is required");
+      setIsLoading(false);
+      return;
+    }
+    if(data.password.trim()=== ""){
+      toast.error("Password is required");
+      setIsLoading(false);
+      return;
+    }
+
+    // Simulate API request
+    try {
+      const response = await registerUser(data);
+      console.log("API Response:", response);
+      toast.success("Registration successful!");
+      setData({
+        name: '',
+        email: '',
+        password: '',
+      });
+      //navigate to login page after successful registration
+      navigate('/login');
+
+    }catch (error) {
+      console.error("API Error:", error);
+      toast.error("Registration failed. Please try again.");
+    }
+  }; 
 
   return (
     <div className="min-h-screen mb-10 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 transition-colors duration-300 font-sans flex flex-col justify-center items-center px-6 relative selection:bg-zinc-950 selection:text-white dark:selection:bg-white dark:selection:text-zinc-950">
@@ -49,10 +102,10 @@ export default function SignupPage() {
               <div className="relative">
                 <User className="w-5 h-5 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input 
-                  type="text" 
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  type="text"
+                  value={data.name}
+                  onChange={handleInputChange}
+                  name="name"
                   placeholder="John Doe" 
                   className="w-full pl-11 pr-4 py-3 rounded-xl border border-zinc-300 dark:border-zinc-800 bg-transparent text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 transition-all"
                 />
@@ -68,9 +121,10 @@ export default function SignupPage() {
                 <Mail className="w-5 h-5 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input 
                   type="email" 
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  
+                  value={data.email}
+                  onChange={handleInputChange}
+                  name="email"
                   placeholder="name@example.com" 
                   className="w-full pl-11 pr-4 py-3 rounded-xl border border-zinc-300 dark:border-zinc-800 bg-transparent text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 transition-all"
                 />
@@ -86,9 +140,10 @@ export default function SignupPage() {
                 <Lock className="w-5 h-5 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input 
                   type="password" 
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+             
+                  value={data.password}
+                  onChange={handleInputChange}
+                  name="password"
                   placeholder="••••••••" 
                   className="w-full pl-11 pr-4 py-3 rounded-xl border border-zinc-300 dark:border-zinc-800 bg-transparent text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 transition-all"
                 />

@@ -1,17 +1,36 @@
 import React, { useState } from 'react';
 import { Mail, Lock, ArrowRight, Shield } from 'lucide-react';
+import type LoginData from '../models/LogingData';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [data, setData] = useState<LoginData>({
+    email: '',
+    password: '',
+  });
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    // Simulate authentication request
-    setTimeout(() => setIsLoading(false), 1500);
+ //Define the handleInputChange function to update the state based on input changes
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    
+    setData((prevData) => ({
+      ...prevData,
+      [event.target.name]: event.target.value,
+    }));
+
   };
+//Define the handleSubmit function to handle form submission
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsLoading(true);
+    setError(null);
+    console.log("Logging data:", data);
+    // Simulate API request
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+  }
+ 
 
   return (
     <div className="min-h-screen mb-10 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 transition-colors duration-300 font-sans flex flex-col justify-center items-center px-6 relative selection:bg-zinc-950 selection:text-white dark:selection:bg-white dark:selection:text-zinc-950">
@@ -50,8 +69,9 @@ export default function LoginPage() {
                 <input 
                   type="email" 
                   required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={data.email}
+                  name="email"
+                  onChange={handleInputChange}
                   placeholder="name@example.com" 
                   className="w-full pl-11 pr-4 py-3 rounded-xl border border-zinc-300 dark:border-zinc-800 bg-transparent text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 transition-all"
                 />
@@ -73,8 +93,9 @@ export default function LoginPage() {
                 <input 
                   type="password" 
                   required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  name="password"
+                  value={data.password}
+                  onChange={handleInputChange}
                   placeholder="••••••••" 
                   className="w-full pl-11 pr-4 py-3 rounded-xl border border-zinc-300 dark:border-zinc-800 bg-transparent text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 transition-all"
                 />
@@ -146,4 +167,4 @@ export default function LoginPage() {
 
     </div>
   );
-}
+} 
