@@ -1,4 +1,5 @@
 import type RegisterData from "../models/RegisterData";
+import type LoginData from "../models/LogingData";
 import apiClient from "../config/ApiClient";
 
 
@@ -10,6 +11,13 @@ export const registerUser = async (signupData: RegisterData) => {
 }
 
 //Login user function to call the API for user login
+export const loginUser = async (loginData:LoginData) => {
+    //call api to login user
+    const response = await apiClient.post(`/auth/login`, loginData);
+    return response.data;
+}
+
+
 //Access token function to call the API for getting access token
 
 //Refresh token function to call the API for refreshing the access token
