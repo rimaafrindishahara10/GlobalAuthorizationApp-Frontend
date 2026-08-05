@@ -6,6 +6,7 @@ import { loginUser } from "../services/AuthServices";
 import { useNavigate } from "react-router";
 import { Alert, AlertTitle } from "../components/ui/alert";
 import { Spinner } from "../components/ui/spinner";
+import useAuth from "../auth/store";
 
 export default function LoginPage() {
   const [data, setData] = useState<LoginData>({
@@ -16,6 +17,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<any>(null);
+  const login = useAuth((state) => state.login);
 
   //Define the handleInputChange function to update the state based on input changes
   const handleInputChange = async (
@@ -45,7 +47,10 @@ export default function LoginPage() {
 
     //call to server or API to authenticate user credentials:
     try {
-      const loginUserResult = await loginUser(data);
+      //const loginUserResult = await loginUser(data);
+
+      //Login: Use the useAuth store to call the login function and pass the login data
+      const loginUserResult = await login(data);
       navigate("/dashboard"); // Navigate to the dashboard page after successful login
       console.log("Login successful:", loginUserResult);
       toast.success("Login successful!");
