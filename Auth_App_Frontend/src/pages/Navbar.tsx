@@ -22,7 +22,10 @@ function Navbar() {
       <div className="flex items-center gap-4">
         {checkIsLoggedIn() ? (
           <>
-            <NavLink to={"!#"} className="text-white hover:text-gray-500">
+            <NavLink
+              to={"dashboard/profile"}
+              className="text-white hover:text-gray-500"
+            >
               {user?.name}
             </NavLink>
 

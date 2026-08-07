@@ -1,15 +1,17 @@
-import React from 'react'
+import React from "react";
+import useAuth from "../../auth/store";
+import { Navigate, Outlet } from "react-router";
 
 function UserLayout() {
-  return (
-    <>
-    <div className='flex justify-center items-center h-screen'>
-        <h1 className='text-3xl font-bold'>Welcome to the User Dashboard</h1>
-        <p className='text-lg'>This is the user dashboard content.</p>
-    </div>
-      
-    </>
-  )
+  const checkLogin = useAuth((state) => state.checkIsLoggedIn);
+
+  if (checkLogin()) {
+    return (
+      <>
+        <Outlet />
+      </>
+    );
+  } else return <Navigate to={"/login"} />;
 }
 
-export default UserLayout
+export default UserLayout;
