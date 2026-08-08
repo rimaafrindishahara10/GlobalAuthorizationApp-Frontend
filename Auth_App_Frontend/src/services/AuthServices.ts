@@ -33,3 +33,7 @@ export const getCurrentUser= async(emailId:string | undefined) =>{
 //Access token function to call the API for getting access token
 
 //Refresh token function to call the API for refreshing the access token
+export const refreshToken= async ()=>{
+   const response= await apiClient.post<LoginResponseData> (`/auth/refreshToken`);
+   return response.data;
+}

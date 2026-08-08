@@ -18,6 +18,12 @@ type AuthState = {
     login :(loginData: LoginData)=> Promise<LoginResponseData>;
     logout:(silent ?: boolean)=> void;
     checkIsLoggedIn: () => boolean | undefined;
+    changeLocalLoginData :(
+        accessToken:string,
+        user: User,
+        authStatus: boolean,
+      
+    )=>void;
 
 };
 
@@ -28,6 +34,16 @@ const useAuth = create<AuthState>()(
     user: null,
     authStatus: false,
     authLoading: false,
+    changeLocalLoginData:(accessToken, user,authStatus)=>{
+        set({
+            accessToken:accessToken,
+            user: user,
+            authStatus:authStatus,
+            
+
+        })
+    },
+
     login: async (loginData) => {
         console.log("started loging function");
         set({ authLoading: true});
